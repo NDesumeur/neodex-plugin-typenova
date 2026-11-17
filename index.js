@@ -1,6 +1,6 @@
 // TypeNova pour NeoDex.
 // Le jeu d'origine est écrit en Python (pygame). Son code est traduit en JavaScript par un outil (py2js.py, gardé avec le
-// jeu Python, hors de ce dépôt) et rangé dans game/typenova.js : ce fichier-là ne s'édite pas à la main, il se régénère.
+// jeu Python, hors de ce dépôt) et rangé dans engine/typenova.js (dossier « engine » : le contrôle des traductions ne le lit pas, le jeu a ses propres langues) : ce fichier-là ne s'édite pas à la main, il se régénère.
 // Ici, on ne fait que le lancer :
 //   1. on lit le code du jeu et la liste de ses fichiers (polices, sons, mots) dans l'archive du plugin (ctx.files.read) ;
 //   2. on ouvre une iframe à part pour le jeu. Il lui faut sa propre page : pour se comporter comme Python, son code ajoute
@@ -50,7 +50,7 @@ export default async function (ctx) {
   let frame = null, ready = false;
   const post = (m, transfer) => frame && frame.contentWindow && frame.contentWindow.postMessage(m, '*', transfer || []);
   try {
-    const [code, list] = await Promise.all([ctx.files.read('game/typenova.js'), ctx.files.read('game/files.json')]);
+    const [code, list] = await Promise.all([ctx.files.read('engine/typenova.js'), ctx.files.read('engine/files.json')]);
     const files = new Map(JSON.parse(dec.decode(list)));   // chemin vu par le jeu -> fichier dans l'archive
     const user = {};
     for (const name of DOCS) { const doc = await ctx.folder.read(name).catch(() => null); if (doc != null) user[name + '.json'] = JSON.stringify(doc); }
