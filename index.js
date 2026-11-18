@@ -47,7 +47,7 @@ export default async function (ctx) {
   note.textContent = t('Chargement de TypeNova…'); view.append(note);
   const showError = text => { note.style.display = 'grid'; note.style.background = '#0d0a1aee'; note.textContent = t('TypeNova a rencontré une erreur.') + '\n\n' + String(text).split('\n').slice(0, 4).join('\n'); };
 
-  let frame = null, ready = false;
+  let frame = null, ready = false, toggle = () => {};
   const post = (m, transfer) => frame && frame.contentWindow && frame.contentWindow.postMessage(m, '*', transfer || []);
   try {
     const [code, list] = await Promise.all([ctx.files.read('engine/typenova.js'), ctx.files.read('engine/files.json')]);
@@ -74,6 +74,7 @@ export default async function (ctx) {
       else if (d.tn === 'open') ctx.ui.newTab(d.url);
       else if (d.tn === 'ready') { ready = true; note.style.display = 'none'; frame.contentWindow.focus(); }
       else if (d.tn === 'error') showError(d.text);
+      else if (d.tn === 'key' && d.key === 'F11') { toggle(); }
       else if (d.tn === 'key') document.dispatchEvent(new KeyboardEvent('keydown', { key: d.key, code: d.code, ctrlKey: d.ctrlKey, altKey: d.altKey, shiftKey: d.shiftKey, metaKey: d.metaKey, bubbles: true }));
       else if (d.tn === 'probe') window.__tnProbe = d;
     });
@@ -85,8 +86,23 @@ export default async function (ctx) {
     view.append(frame);
   } catch (e) { showError(e && e.message || e); return; }
 
-  // la vue fermée : le jeu et sa musique s'arrêtent ; rouverte : ils reprennent, et le clavier revient au jeu
-  ctx.onClose(() => post({ tn: 'pause', on: true }));
-  ctx.onOpen(() => { post({ tn: 'pause', on: false }); if (ready) frame.contentWindow.focus(); });
+  // la vue fermée ou simplement cachée (un autre onglet devant) : le jeu et sa musique s'arrêtent. Avant, seul onClose les arrêtait,
+  // et TypeNova continuait de tourner derrière les autres onglets (NeoDex ramait). NeoDex met la classe « on » sur la page du plugin quand on le voit.
+  const shown = () => document.body.classList.contains('on');
+  let paused = false;
+  const sync = () => { const p = !shown(); if (p === paused) return; paused = p; post({ tn: 'pause', on: p }); if (!p && ready) frame.contentWindow.focus(); };
+  new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  ctx.onClose(() => { paused = true; post({ tn: 'pause', on: true }); });
+  ctx.onOpen(() => { paused = false; post({ tn: 'pause', on: false }); if (ready) frame.contentWindow.focus(); });
+
+  // plein écran : un petit bouton en haut à droite (et F11 dans le jeu, transmis par la page du jeu)
+  const fs = ctx.el('button'); fs.type = 'button';
+  fs.style.cssText = 'position:absolute;top:8px;right:8px;z-index:3;font:600 13px system-ui,sans-serif;color:#cfc3ff;background:#0d0a1acc;border:2px solid #6c5ce7;border-radius:6px;padding:4px 10px;cursor:pointer;opacity:.55';
+  const label = () => { fs.textContent = document.fullscreenElement ? '✕ ' + t('Quitter le plein écran') : '⛶ ' + t('Plein écran'); };
+  toggle = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {});
+  fs.onmouseenter = () => { fs.style.opacity = '1'; }; fs.onmouseleave = () => { fs.style.opacity = '.55'; };
+  fs.onclick = () => { toggle(); if (ready) frame.contentWindow.focus(); };
+  document.addEventListener('fullscreenchange', () => { label(); if (ready) frame.contentWindow.focus(); });
+  label(); view.append(fs);
   window.__tn = { post, probe: () => post({ tn: 'probe' }) };   // pour test-neodex.js
 }
