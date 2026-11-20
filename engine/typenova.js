@@ -356,6 +356,14 @@ __native('datetime', { datetime: __datetime, date: __datetime, timedelta: (...a)
   const SRCALPHA = 65536, BLEND_ADD = 1, BLEND_MULT = 3, BLEND_MIN = 4, BLEND_RGBA_ADD = 6, BLEND_RGBA_MULT = 8, BLEND_RGBA_MIN = 9, BLEND_RGB_ADD = 1;
   const T = Math.trunc, SOFT_MAX = +(new URLSearchParams(location.search).get('soft') || 4096);
   const makeCanvas = (w, h) => new OffscreenCanvas(Math.max(1, w), Math.max(1, h));
+  // Les particules fabriquent une petite surface neuve à chaque image (~2000 canvas par seconde) : le ramasse-miettes figeait le jeu
+  // 100 à 500 ms. Une surface jetée rend son canvas (FinalizationRegistry) ; une nouvelle de même taille le reprend, vidé par reset().
+  const canvasPool = new Map(), canvasFreed = new FinalizationRegistry(([k, cv]) => { const a = canvasPool.get(k); if (!a) canvasPool.set(k, [cv]); else if (a.length < 24) a.push(cv); });
+  const takeCanvas = (owner, w, h) => {
+    w = Math.max(1, w); h = Math.max(1, h); const k = w * 65536 + h, a = canvasPool.get(k); let cv = a && a.length ? a.pop() : null;
+    if (cv) cv.getContext('2d', w * h <= SOFT_MAX ? { willReadFrequently: true } : undefined).reset(); else cv = makeCanvas(w, h);
+    canvasFreed.register(owner, [k, cv]); return cv;
+  };
 
   // ---------- couleurs ----------
   const clamp = v => v < 0 ? 0 : v > 255 ? 255 : v | 0;
@@ -418,7 +426,7 @@ __native('datetime', { datetime: __datetime, date: __datetime, timedelta: (...a)
       if (size === null) return;   // construite par Surface.wrap
       this.w = Math.max(0, T(size[0])); this.h = Math.max(0, T(size[1]));
       this.srcalpha = !!(flags & SRCALPHA);
-      this.canvas = makeCanvas(this.w, this.h); this._ctx = null; this._alpha = null; this._shared = false; this._px = null; this._dirty = false; this._clipped = false; this._clip = null;
+      this.canvas = takeCanvas(this, this.w, this.h); this._ctx = null; this._alpha = null; this._shared = false; this._px = null; this._dirty = false; this._clipped = false; this._clip = null;
       if (!this.srcalpha) { const c = this.ctx; c.fillStyle = '#000'; c.fillRect(0, 0, this.w, this.h); }   // sans transparence, une surface naît noire
     }
     static wrap(canvas, w, h, srcalpha, shared) {
@@ -568,13 +576,22 @@ __native('datetime', { datetime: __datetime, date: __datetime, timedelta: (...a)
 
   // ---------- pygame.transform ----------
   function resized(src, size, smooth) {
-    const w = Math.max(0, T(size[0])), h = Math.max(0, T(size[1])), s = Surface.wrap(makeCanvas(w, h), w, h, true, false);
+    const w = Math.max(0, T(size[0])), h = Math.max(0, T(size[1])), s = Surface.wrap(null, w, h, true, false); s.canvas = takeCanvas(s, w, h);
     if (w && h && src.w && src.h) { s.ctx.imageSmoothingEnabled = smooth; s.ctx.imageSmoothingQuality = 'high'; s.ctx.drawImage(src._rd(), 0, 0, src.w, src.h, 0, 0, w, h); }
     s._alpha = src._alpha; return s;   // pygame garde la transparence globale (set_alpha) de la surface d'origine
   }
+  // 3.3.3 : une lettre en cache (texte jamais modifié) tournée aux mêmes 5° près réutilise la même image : les traînées de lettres
+  // en tournaient 200 par image (8 ms). Le résultat est partagé : _wr en fait une copie avant d’y dessiner. shortcut: pas de 5° pour borner la mémoire (72 images par lettre au plus).
+  const turnCache = new WeakMap();
   function rotated(src, angle, scale, smooth) {
+    if (!src._shared || scale !== 1) return rotatedNow(src, angle, scale, smooth);
+    const k = Math.round(angle / 5) * 5 % 360; let m = turnCache.get(src.canvas); if (!m) turnCache.set(src.canvas, m = new Map());
+    let hit = m.get(k); if (!hit) { const r = rotatedNow(src, k, 1, smooth, true); m.set(k, hit = r); }
+    const s = Surface.wrap(hit.canvas, hit.w, hit.h, true, true); s._alpha = src._alpha; return s;
+  }
+  function rotatedNow(src, angle, scale, smooth, keep) {   // keep : canvas gardé dans le cache des lettres tournées, jamais rendu
     const a = angle * Math.PI / 180, co = Math.abs(Math.cos(a)), si = Math.abs(Math.sin(a)), sw = src.w * scale, sh = src.h * scale;
-    const w = Math.max(1, Math.ceil(sw * co + sh * si - 1e-9)), h = Math.max(1, Math.ceil(sw * si + sh * co - 1e-9)), s = Surface.wrap(makeCanvas(w, h), w, h, true, false), c = s.ctx;
+    const w = Math.max(1, Math.ceil(sw * co + sh * si - 1e-9)), h = Math.max(1, Math.ceil(sw * si + sh * co - 1e-9)), s = Surface.wrap(null, w, h, true, false); s.canvas = keep ? makeCanvas(w, h) : takeCanvas(s, w, h); const c = s.ctx;
     s._alpha = src._alpha; if (!src.w || !src.h) return s;
     c.imageSmoothingEnabled = smooth; c.imageSmoothingQuality = 'high'; c.translate(w / 2, h / 2); c.rotate(-a); c.scale(scale, scale); c.drawImage(src._rd(), -src.w / 2, -src.h / 2); c.setTransform(1, 0, 0, 1, 0, 0);
     s._alpha = src._alpha; return s;
