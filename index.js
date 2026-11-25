@@ -42,6 +42,9 @@ const page = code => '<!doctype html><meta charset="utf-8"><style>html,body{marg
 
 export default async function (ctx) {
   const t = ctx.t || (s => s), view = ctx.view, dec = new TextDecoder();
+  // les trophées de NeoDex (3.4.8 et plus) : succès et records déclarés dans plugin.json ; sur un NeoDex plus ancien, rien ne se passe
+  const trophy = (id, quiet) => { ctx.games?.unlock(id, quiet).catch(() => {}); };  // quiet : sans message de NeoDex (le jeu montre déjà le sien)
+  const trophyRecord = (id, v) => { if (v != null && Number.isFinite(+v)) ctx.games?.record(id, +v).catch(() => {}); };
   view.style.position = 'relative'; view.style.overflow = 'hidden'; view.style.background = '#0d0a1a';
   const note = ctx.el('div'); note.style.cssText = 'position:absolute;inset:0;display:grid;place-items:center;color:#cfc3ff;font-size:18px;text-align:center;padding:24px;white-space:pre-wrap;z-index:2';
   note.textContent = t('Chargement de TypeNova…'); view.append(note);
@@ -54,11 +57,12 @@ export default async function (ctx) {
     const files = new Map(JSON.parse(dec.decode(list)));   // chemin vu par le jeu -> fichier dans l'archive
     const user = {};
     for (const name of DOCS) { const doc = await ctx.folder.read(name).catch(() => null); if (doc != null) user[name + '.json'] = JSON.stringify(doc); }
+    if (user['progression.json']) setTimeout(() => tnTrophies(user['progression.json']));
 
     // une sauvegarde à la fois par document, dans l'ordre où le jeu les écrit
     let saving = Promise.resolve(); const saved = window.__tnSaved = [];   // les documents enregistrés, dans l'ordre (lu par test-neodex.js)
     const save = (name, text) => {
-      const doc = name.replace(/\.json$/, ''); if (!DOCS.includes(doc) || !name.endsWith('.json')) return;
+      const doc = name.replace(/\.json$/, ''); if (!DOCS.includes(doc) || !name.endsWith('.json')) return; if (doc === 'progression' && text) tnTrophies(text);
       saving = saving.then(() => text == null ? ctx.folder.remove(doc) : ctx.folder.write(doc, JSON.parse(text))).then(() => { saved.push(doc); }).catch(e => ctx.ui.toast(t('Sauvegarde impossible') + ' : ' + (e && e.message || e), true));
     };
 
@@ -93,6 +97,13 @@ export default async function (ctx) {
   const sync = () => { const p = !shown(); if (p === paused) return; paused = p; post({ tn: 'pause', on: p }); if (!p && ready) frame.contentWindow.focus(); };
   new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   ctx.onClose(() => { paused = true; post({ tn: 'pause', on: true }); });
+  // les trophées, tirés des statistiques et des records gardés (aussi à l'ouverture : ce qui a été fait avant compte)
+  function tnTrophies(text) {  // les succès du jeu (stats.unlocked_achievements de progression.json) passent dans NeoDex, sans message
+    let p; try { p = JSON.parse(text); } catch { return; }
+    const got = p.unlocked_achievements || [], sig = [got.length, p.level, p.best_score, p.max_combo_ever, p.total_words].join(); if (sig === tnTrophies.sig) return; tnTrophies.sig = sig;
+    for (const id of got) trophy(id, true);
+    trophyRecord('niveau', p.total_games ? p.level : null); trophyRecord('score', p.best_score || null); trophyRecord('combo', p.max_combo_ever || null); trophyRecord('mots', p.total_words || null);
+  }
   ctx.onOpen(() => { paused = false; post({ tn: 'pause', on: false }); if (ready) frame.contentWindow.focus(); });
 
   // plein écran : un petit bouton en haut à droite (et F11 dans le jeu, transmis par la page du jeu)

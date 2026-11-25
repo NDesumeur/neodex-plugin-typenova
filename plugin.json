@@ -1,7 +1,7 @@
 {
   "id": "neodex.typenova",
   "name": "TypeNova",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": "NDesumeur",
   "description": "Le jeu de frappe spatial : des mots traversent l'écran, tape-les avant qu'ils n'atteignent ta fusée. Cinq difficultés, combos, mots dorés et bonus, modificateurs de partie, tutoriel et guide du jeu. Affronte le boss NEXUS-7 dans des duels au clavier, découvre l'histoire, monte de niveau pour débloquer skins de fusée, curseurs, thèmes, sons de frappe et 94 succès. Profil, records et historique de tes parties ; 16 polices et 4 langues (français, anglais, espagnol, allemand).",
   "icon": "icon.png",
@@ -10,7 +10,10 @@
   "neobase": ">=4.0.0",
   "type": "app",
   "category": "Jeux",
-  "compatibility": ["windows", "linux"],
+  "compatibility": [
+    "windows",
+    "linux"
+  ],
   "syncMode": "progression",
   "syncInfo": "Niveau, succès, records, réglages et historique des parties.",
   "mobile": false,
@@ -20,5 +23,509 @@
   "permissions": [
     "storage",
     "files"
+  ],
+  "succes": [
+    {
+      "id": "first_word",
+      "nom": "Premier Pas",
+      "texte": "Taper votre premier mot"
+    },
+    {
+      "id": "word_master_100",
+      "nom": "Apprenti Typeur",
+      "texte": "Taper 100 mots"
+    },
+    {
+      "id": "word_master_500",
+      "nom": "Typeur Expérimenté",
+      "texte": "Taper 500 mots"
+    },
+    {
+      "id": "word_master_1000",
+      "nom": "Maître des Mots",
+      "texte": "Taper 1000 mots"
+    },
+    {
+      "id": "word_master_5000",
+      "nom": "Légende Vivante",
+      "texte": "Taper 5000 mots"
+    },
+    {
+      "id": "word_master_10000",
+      "nom": "Virtuose",
+      "texte": "Taper 10 000 mots"
+    },
+    {
+      "id": "word_master_25000",
+      "nom": "Prodige",
+      "texte": "Taper 25 000 mots"
+    },
+    {
+      "id": "word_master_50000",
+      "nom": "Dieu du Clavier",
+      "texte": "Taper 50 000 mots"
+    },
+    {
+      "id": "word_master_100000",
+      "nom": "Transcendance",
+      "texte": "Taper 100 000 mots"
+    },
+    {
+      "id": "word_master_1000000",
+      "nom": "Immortel",
+      "texte": "Taper 1 000 000 de mots"
+    },
+    {
+      "id": "combo_10",
+      "nom": "En Série",
+      "texte": "Atteindre un combo de 10"
+    },
+    {
+      "id": "combo_25",
+      "nom": "Enchaîneur",
+      "texte": "Atteindre un combo de 25"
+    },
+    {
+      "id": "combo_50",
+      "nom": "Imparable",
+      "texte": "Atteindre un combo de 50"
+    },
+    {
+      "id": "combo_100",
+      "nom": "Machine de Guerre",
+      "texte": "Atteindre un combo de 100"
+    },
+    {
+      "id": "combo_200",
+      "nom": "Inarrêtable",
+      "texte": "Atteindre un combo de 200"
+    },
+    {
+      "id": "combo_500",
+      "nom": "Force de la Nature",
+      "texte": "Atteindre un combo de 500"
+    },
+    {
+      "id": "combo_1000",
+      "nom": "Phénomène",
+      "texte": "Atteindre un combo de 1000"
+    },
+    {
+      "id": "score_10k",
+      "nom": "Scorer Amateur",
+      "texte": "Atteindre 10 000 points"
+    },
+    {
+      "id": "score_50k",
+      "nom": "Scorer Pro",
+      "texte": "Atteindre 50 000 points"
+    },
+    {
+      "id": "score_100k",
+      "nom": "Champion",
+      "texte": "Atteindre 100 000 points"
+    },
+    {
+      "id": "score_250k",
+      "nom": "Maître Absolu",
+      "texte": "Atteindre 250 000 points"
+    },
+    {
+      "id": "score_500k",
+      "nom": "Demi-Dieu",
+      "texte": "Atteindre 500 000 points"
+    },
+    {
+      "id": "score_1m",
+      "nom": "Légende Ultime",
+      "texte": "Atteindre 1 000 000 de points"
+    },
+    {
+      "id": "score_10m",
+      "nom": "Au-delà du Réel",
+      "texte": "Atteindre 10 000 000 de points"
+    },
+    {
+      "id": "level_10",
+      "nom": "Aventurier",
+      "texte": "Atteindre le niveau 10"
+    },
+    {
+      "id": "level_20",
+      "nom": "Explorateur",
+      "texte": "Atteindre le niveau 20"
+    },
+    {
+      "id": "level_30",
+      "nom": "Conquérant",
+      "texte": "Atteindre le niveau 30"
+    },
+    {
+      "id": "level_50",
+      "nom": "Vétéran",
+      "texte": "Atteindre le niveau 50"
+    },
+    {
+      "id": "level_75",
+      "nom": "Expert",
+      "texte": "Atteindre le niveau 75"
+    },
+    {
+      "id": "level_100",
+      "nom": "Centurion",
+      "texte": "Atteindre le niveau 100"
+    },
+    {
+      "id": "level_200",
+      "nom": "Légende de Guerre",
+      "texte": "Atteindre le niveau 200"
+    },
+    {
+      "id": "level_300",
+      "nom": "Titan",
+      "texte": "Atteindre le niveau 300"
+    },
+    {
+      "id": "level_400",
+      "nom": "Dieu Vivant",
+      "texte": "Atteindre le niveau 400"
+    },
+    {
+      "id": "level_500",
+      "nom": "Être Suprême",
+      "texte": "Atteindre le niveau 500"
+    },
+    {
+      "id": "level_1000",
+      "nom": "Entité Cosmique",
+      "texte": "Atteindre le niveau 1000"
+    },
+    {
+      "id": "powerup_collector",
+      "nom": "Collectionneur",
+      "texte": "Récupérer 50 power-ups"
+    },
+    {
+      "id": "powerup_hoarder",
+      "nom": "Accumulateur",
+      "texte": "Récupérer 200 power-ups"
+    },
+    {
+      "id": "powerup_master",
+      "nom": "Maître des Pouvoirs",
+      "texte": "Récupérer 500 power-ups"
+    },
+    {
+      "id": "powerup_legend",
+      "nom": "Chasseur Légendaire",
+      "texte": "Récupérer 1000 power-ups"
+    },
+    {
+      "id": "progression_25",
+      "nom": "Ascension I",
+      "texte": "Atteindre le niveau de progression 25"
+    },
+    {
+      "id": "progression_50",
+      "nom": "Ascension II",
+      "texte": "Atteindre le niveau de progression 50"
+    },
+    {
+      "id": "progression_100",
+      "nom": "Ascension III",
+      "texte": "Atteindre le niveau de progression 100"
+    },
+    {
+      "id": "progression_200",
+      "nom": "Ascension IV",
+      "texte": "Atteindre le niveau de progression 200"
+    },
+    {
+      "id": "progression_300",
+      "nom": "Ascension V",
+      "texte": "Atteindre le niveau de progression 300"
+    },
+    {
+      "id": "progression_500",
+      "nom": "Transcendance Ultime",
+      "texte": "Atteindre le niveau de progression 500"
+    },
+    {
+      "id": "speed_demon",
+      "nom": "Démon de Vitesse",
+      "texte": "Taper 10 mots en moins de 10 secondes"
+    },
+    {
+      "id": "marathon_runner",
+      "nom": "Marathonien",
+      "texte": "Jouer pendant 60 minutes sans pause"
+    },
+    {
+      "id": "iron_fingers",
+      "nom": "Doigts de Fer",
+      "texte": "Taper 1000 mots en une seule partie"
+    },
+    {
+      "id": "flawless_streak",
+      "nom": "Série Impeccable",
+      "texte": "100 mots corrects d'affilée"
+    },
+    {
+      "id": "ultimate_focus",
+      "nom": "Concentration Ultime",
+      "texte": "Combo 200 en difficulté Expert"
+    },
+    {
+      "id": "dedicated",
+      "nom": "Dédié",
+      "texte": "Jouer 10 parties"
+    },
+    {
+      "id": "committed",
+      "nom": "Engagé",
+      "texte": "Jouer 50 parties"
+    },
+    {
+      "id": "devoted",
+      "nom": "Dévoué",
+      "texte": "Jouer 100 parties"
+    },
+    {
+      "id": "obsessed",
+      "nom": "Obsédé",
+      "texte": "Jouer 500 parties"
+    },
+    {
+      "id": "addicted",
+      "nom": "Accro",
+      "texte": "Jouer 1000 parties"
+    },
+    {
+      "id": "golden_touch",
+      "nom": "Toucher Doré",
+      "texte": "Valider 1 mot doré"
+    },
+    {
+      "id": "gold_rush",
+      "nom": "Ruée vers l'Or",
+      "texte": "Valider 10 mots dorés"
+    },
+    {
+      "id": "golden_legend",
+      "nom": "Légende Dorée",
+      "texte": "Valider 50 mots dorés"
+    },
+    {
+      "id": "midas",
+      "nom": "Roi Midas",
+      "texte": "Valider 100 mots dorés"
+    },
+    {
+      "id": "golden_god",
+      "nom": "Divinité Dorée",
+      "texte": "Valider 500 mots dorés"
+    },
+    {
+      "id": "boss_slayer",
+      "nom": "Tueur de Boss",
+      "texte": "Vaincre NEXUS-7 pour la première fois"
+    },
+    {
+      "id": "boss_easy",
+      "nom": "Échauffement",
+      "texte": "Vaincre NEXUS-7 en difficulté Facile"
+    },
+    {
+      "id": "boss_medium",
+      "nom": "Challenger",
+      "texte": "Vaincre NEXUS-7 en difficulté Moyen"
+    },
+    {
+      "id": "boss_hard",
+      "nom": "Dompteur",
+      "texte": "Vaincre NEXUS-7 en difficulté Difficile"
+    },
+    {
+      "id": "boss_expert",
+      "nom": "Exterminateur",
+      "texte": "Vaincre NEXUS-7 en difficulté Expert"
+    },
+    {
+      "id": "boss_x2",
+      "nom": "Légende du NEXUS",
+      "texte": "Vaincre NEXUS-7 en difficulté X2"
+    },
+    {
+      "id": "boss_punching_bag",
+      "nom": "Sac de Frappe",
+      "texte": "Perdre 10 fois contre NEXUS-7"
+    },
+    {
+      "id": "boss_nemesis",
+      "nom": "Némésis",
+      "texte": "Perdre 50 fois contre NEXUS-7"
+    },
+    {
+      "id": "mirror_master",
+      "nom": "Maître du Miroir",
+      "texte": "Atteindre le niveau 10 avec le modifier Miroir"
+    },
+    {
+      "id": "no_backspace_warrior",
+      "nom": "Guerrier Sans Retour",
+      "texte": "Atteindre le niveau 10 avec le modifier Sans Backspace"
+    },
+    {
+      "id": "modifier_maniac",
+      "nom": "Maniaque des Modifiers",
+      "texte": "Terminer une partie avec 3 modifiers ou plus actifs"
+    },
+    {
+      "id": "all_modifiers",
+      "nom": "Chaos Total",
+      "texte": "Jouer avec TOUS les modifiers activés"
+    },
+    {
+      "id": "speed_demon_x2",
+      "nom": "Vitesse Lumière",
+      "texte": "Atteindre le niveau 5 en X2 avec modifier x2 vitesse"
+    },
+    {
+      "id": "playtime_1h",
+      "nom": "Première Heure",
+      "texte": "Jouer un total de 1 heure"
+    },
+    {
+      "id": "playtime_10h",
+      "nom": "Vétéran du Clavier",
+      "texte": "Jouer un total de 10 heures"
+    },
+    {
+      "id": "playtime_50h",
+      "nom": "No Life",
+      "texte": "Jouer un total de 50 heures"
+    },
+    {
+      "id": "playtime_100h",
+      "nom": "Éternel",
+      "texte": "Jouer un total de 100 heures"
+    },
+    {
+      "id": "skin_collector",
+      "nom": "Collectionneur de Vaisseaux",
+      "texte": "Débloquer 4 skins de fusée"
+    },
+    {
+      "id": "skin_completionist",
+      "nom": "Garage Complet",
+      "texte": "Débloquer toutes les skins de fusée"
+    },
+    {
+      "id": "try_all_difficulties",
+      "nom": "Touche-à-Tout",
+      "texte": "Jouer au moins une partie dans chaque difficulté"
+    },
+    {
+      "id": "expert_first_game",
+      "nom": "Téméraire",
+      "texte": "Jouer sa première partie en difficulté Expert"
+    },
+    {
+      "id": "x2_survivor",
+      "nom": "Survivant X2",
+      "texte": "Atteindre le niveau 5 en difficulté X2"
+    },
+    {
+      "id": "comeback_king",
+      "nom": "Roi du Comeback",
+      "texte": "Atteindre un combo de 50 après avoir perdu une vie"
+    },
+    {
+      "id": "night_owl",
+      "nom": "Oiseau de Nuit",
+      "texte": "Jouer entre minuit et 4h du matin",
+      "cache": true
+    },
+    {
+      "id": "early_bird",
+      "nom": "Lève-Tôt",
+      "texte": "Jouer entre 5h et 7h du matin",
+      "cache": true
+    },
+    {
+      "id": "glitch_finder",
+      "nom": "Chasseur de Glitch",
+      "texte": "Débloquer le skin secret Glitch",
+      "cache": true
+    },
+    {
+      "id": "long_word_sniper",
+      "nom": "Sniper de Mots Longs",
+      "texte": "Taper un mot de 15 lettres ou plus",
+      "cache": true
+    },
+    {
+      "id": "double_trouble",
+      "nom": "Double Peine",
+      "texte": "Perdre toutes ses vies en moins de 30 secondes",
+      "cache": true
+    },
+    {
+      "id": "thousand_games",
+      "nom": "Millénaire",
+      "texte": "Atteindre 2000 parties jouées"
+    },
+    {
+      "id": "ten_thousand_games",
+      "nom": "Éternel Joueur",
+      "texte": "Jouer 10 000 parties"
+    },
+    {
+      "id": "credits_found",
+      "nom": "Générique",
+      "texte": "Trouver les crédits du jeu",
+      "cache": true
+    },
+    {
+      "id": "theme_collector",
+      "nom": "Collectionneur de Thèmes",
+      "texte": "Débloquer tous les thèmes"
+    },
+    {
+      "id": "achievement_hunter",
+      "nom": "Chasseur de Succès",
+      "texte": "Débloquer 50 succès"
+    },
+    {
+      "id": "completionist",
+      "nom": "Complétionniste",
+      "texte": "Débloquer les 93 autres succès"
+    }
+  ],
+  "records": [
+    {
+      "id": "niveau",
+      "nom": "Niveau",
+      "sens": "haut",
+      "format": "nombre"
+    },
+    {
+      "id": "score",
+      "nom": "Meilleur score",
+      "sens": "haut",
+      "format": "nombre"
+    },
+    {
+      "id": "combo",
+      "nom": "Plus grand combo",
+      "sens": "haut",
+      "format": "nombre"
+    },
+    {
+      "id": "mots",
+      "nom": "Mots tapés",
+      "sens": "haut",
+      "format": "nombre"
+    }
   ]
 }
