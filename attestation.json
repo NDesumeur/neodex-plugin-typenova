@@ -1,9 +1,9 @@
 {
   "pluginId": "neodex.typenova",
   "repo": "NDesumeur/neodex-plugin-typenova",
-  "version": "1.0.2",
-  "sha256": "2b5d85ca458230ae6224d9cba48c2950b66a7148e8929fa9ff458bda3459e518",
-  "approvedAt": "2026-11-20T01:51:13.673Z",
+  "version": "1.1.0",
+  "sha256": "37a68fa9d379ab718f9d8711eb6dac224556620ba4e7d9d78d62ffac0d1316bd",
+  "approvedAt": "2026-11-25T17:16:46.845Z",
   "neobase": ">=4.0.0",
-  "signature": "2ZLvky2xZEgnlxsaPWurtfT/uCGvjH98tLG8ySNloZQM/2DGtXpjKGOuJuu/dTBKRSDZCYLCozFRBaHinDOWDA=="
+  "signature": "VGbUSl5jmKyIxmxyp92UyDwe8oWVdTKZsG+icYzpZAxd/X5uAhwUPGVLwF2brknPu1+SdPrTf/xIN8i2VpS7Aw=="
 }
